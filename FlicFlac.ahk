@@ -80,7 +80,7 @@ Init:
   ; Read some INI configs  
   IniRead AbortOnError       , %IniFile%, General, AbortOnError, 1
   IniRead SupressErrors      , %IniFile%, General, SupressErrors, 0
-  IniRead ConfirmBeforeDelete, %IniFile%, General, ConfirmBeforeDelete, FLAC,WAV,MP3,OGG,APE,M4A,AAC
+  IniRead ConfirmBeforeDelete, %IniFile%, General, ConfirmBeforeDelete, FLAC,WAV,MP3,OGG,APE,M4A,AAC,MP4
   IniRead ExitAfterContextMenu,%IniFile%, General, ExitAfterContextMenu, 1
   IniRead OpenFolderWhenDone , %IniFile%, General, OpenFolderWhenDone, 0
   IniRead StartInactiveWhenOnTop, %IniFile%, General, StartInactiveWhenOnTop, 1
@@ -172,10 +172,10 @@ Return
 
 
 Main:
-  InFormats     := "FLAC|WAV|MP3|OGG|APE|M4A|AAC"
+  InFormats     := "FLAC|WAV|MP3|OGG|APE|M4A|AAC|MP4"
   OutFormats    := "FLAC|WAV|MP3|OGG|APE"
-  InExtensions  := "[wav][mp3][ogg][ape][m4a][aac]|[flac][mp3][ogg][ape][m4a][aac]|[wav][flac][ogg][ape][mp3][m4a][aac]|[wav][flac][mp3][ape][m4a][aac]|[wav][flac][mp3][ogg][m4a][aac]"
-  InFileFilters := "Audio to FLAC (*.wav; *.mp3; *.ogg; *.ape; *.m4a; *.aac)|Audio to WAV (*.flac; *.mp3; *.ogg; *.ape; *.m4a; *.aac)|Audio to MP3 (*.wav; *.flac; *.ogg; *.mp3; *.ape; *.m4a; *.aac)|Audio to OGG (*.wav; *.flac; *.mp3; *.ape; *.m4a; *.aac)|Audio to APE (*.wav; *.flac; *.mp3; *.ogg; *.m4a; *.aac)"
+  InExtensions  := "[wav][mp3][ogg][ape][m4a][aac][mp4]|[flac][mp3][ogg][ape][m4a][aac][mp4]|[wav][flac][ogg][ape][mp3][m4a][aac][mp4]|[wav][flac][mp3][ape][m4a][aac][mp4]|[wav][flac][mp3][ogg][m4a][aac][mp4]"
+  InFileFilters := "Audio to FLAC (*.wav; *.mp3; *.ogg; *.ape; *.m4a; *.aac; *.mp4)|Audio to WAV (*.flac; *.mp3; *.ogg; *.ape; *.m4a; *.aac; *.mp4)|Audio to MP3 (*.wav; *.flac; *.ogg; *.mp3; *.ape; *.m4a; *.aac; *.mp4)|Audio to OGG (*.wav; *.flac; *.mp3; *.ape; *.m4a; *.aac; *.mp4)|Audio to APE (*.wav; *.flac; *.mp3; *.ogg; *.m4a; *.aac; *.mp4)"
   
   StringSplit OutFormat, OutFormats, |
   StringSplit InFileFilter, InFileFilters, |
@@ -401,6 +401,7 @@ GetCommandLine( contype ) {
   clAPE2WAV   = "%ApeLocation%" "`%Filename`%" "`%NameNoExt`%.wav" -d
   clM4A2WAV   = "%FaadLocation%" %FaadOptions% -o "`%NameNoExt`%.wav" "`%Filename`%" 
   clAAC2WAV   = "%FaadLocation%" %FaadOptions% -o "`%NameNoExt`%.wav" "`%Filename`%" 
+  clMP42WAV   = "%FaadLocation%" %FaadOptions% -o "`%NameNoExt`%.wav" "`%Filename`%"
 
   ; HYBRIDS, return two command lines and the extension of the temporary convert
   ; We could have used a combination of the above, but we want to use a file with 
@@ -420,15 +421,19 @@ GetCommandLine( contype ) {
   clAPE2OGG   = "%ApeLocation%" "`%Filename`%" "%TmpFilename%.wav" -d`n"%OggEncLocation%" %OggOptions% "%TmpFilename%.wav" -o "`%NameNoExt`%.ogg"`nWAV
   clAPE2FLAC  = "%ApeLocation%" "`%Filename`%" "%TmpFilename%.wav" -d`n"%FlacLocation%" %FlacOptions% "%TmpFilename%.wav" -o "`%NameNoExt`%.flac"`nWAV
 
-  ; M4A2* and AAC2* are the same
+  ; M4A2*, AAC2* and MP42* are the same
   clM4A2FLAC  = "%FaadLocation%" %FaadOptions% -o "%TmpFilename%.wav" "`%Filename`%"`n"%FlacLocation%" %FlacOptions% "%TmpFilename%.wav" -o "`%NameNoExt`%.flac"`nWAV
   clAAC2FLAC  = "%FaadLocation%" %FaadOptions% -o "%TmpFilename%.wav" "`%Filename`%"`n"%FlacLocation%" %FlacOptions% "%TmpFilename%.wav" -o "`%NameNoExt`%.flac"`nWAV
+  clMP42FLAC  = "%FaadLocation%" %FaadOptions% -o "%TmpFilename%.wav" "`%Filename`%"`n"%FlacLocation%" %FlacOptions% "%TmpFilename%.wav" -o "`%NameNoExt`%.flac"`nWAV
   clM4A2MP3   = "%FaadLocation%" %FaadOptions% -o "%TmpFilename%.wav" "`%Filename`%"`n"%LameLocation%" %LameOptions% "%TmpFilename%.wav" "`%NameNoExt`%.mp3"`nWAV
   clAAC2MP3   = "%FaadLocation%" %FaadOptions% -o "%TmpFilename%.wav" "`%Filename`%"`n"%LameLocation%" %LameOptions% "%TmpFilename%.wav" "`%NameNoExt`%.mp3"`nWAV
+  clMP42MP3   = "%FaadLocation%" %FaadOptions% -o "%TmpFilename%.wav" "`%Filename`%"`n"%LameLocation%" %LameOptions% "%TmpFilename%.wav" "`%NameNoExt`%.mp3"`nWAV
   clM4A2OGG   = "%FaadLocation%" %FaadOptions% -o "%TmpFilename%.wav" "`%Filename`%"`n"%OggEncLocation%" %OggOptions% "%TmpFilename%.wav" -o "`%NameNoExt`%.ogg"`nWAV
   clAAC2OGG   = "%FaadLocation%" %FaadOptions% -o "%TmpFilename%.wav" "`%Filename`%"`n"%OggEncLocation%" %OggOptions% "%TmpFilename%.wav" -o "`%NameNoExt`%.ogg"`nWAV
+  clMP42OGG   = "%FaadLocation%" %FaadOptions% -o "%TmpFilename%.wav" "`%Filename`%"`n"%OggEncLocation%" %OggOptions% "%TmpFilename%.wav" -o "`%NameNoExt`%.ogg"`nWAV
   clM4A2APE   = "%FaadLocation%" %FaadOptions% -o "%TmpFilename%.wav" "`%Filename`%"`n"%ApeLocation%" "%TmpFilename%.wav" "`%NameNoExt`%.ape" -c%ApeCompression%`nWAV
   clAAC2APE   = "%FaadLocation%" %FaadOptions% -o "%TmpFilename%.wav" "`%Filename`%"`n"%ApeLocation%" "%TmpFilename%.wav" "`%NameNoExt`%.ape" -c%ApeCompression%`nWAV
+  clMP42APE   = "%FaadLocation%" %FaadOptions% -o "%TmpFilename%.wav" "`%Filename`%"`n"%ApeLocation%" "%TmpFilename%.wav" "`%NameNoExt`%.ape" -c%ApeCompression%`nWAV
   
   ; Special Case MP3 to MP3
   clMP32MP3  = "%ComSpec%" /c copy "`%Filename`%" "%TmpFilename%.mp3"`n"%LameLocation%" %LameOptions% "%TmpFilename%.mp3" "`%NameNoExt`%.mp3"`nMP3
@@ -928,8 +933,8 @@ UninstallContextMenu:
     Return 
   }
   
-  Loop %OutFormat0% {
-    Success := CM_DelMenuItem( OutFormat%A_Index%, "Convert with FlicFlac" )
+  Loop %InFormat0% {
+    Success := CM_DelMenuItem( InFormat%A_Index%, "Convert with FlicFlac" )
     If( !Success ) {
       ErrorMessage( "Unable to remove shell integration.`n`nPlease run FlicFlac as administrator." )
       Break
