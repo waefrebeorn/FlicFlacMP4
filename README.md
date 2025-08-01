@@ -116,7 +116,7 @@ Compiling
 --------------------------------------------------
 
 To compile the script into a standalone executable, you will need to have
-[AutoHotkey_L](http://l.autohotkey.net/) installed.
+[AutoHotkey](https://www.autohotkey.com/) installed.
 
 Once you have AutoHotkey_L installed, simply right-click the `Compile.ahk`
 file and select "Compile Script".
