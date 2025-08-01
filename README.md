@@ -112,6 +112,18 @@ Technical Notes
     - Also supported, MP3 to MP3 - to convert to a different bitrate.
 
 
+Compiling
+--------------------------------------------------
+
+To compile the script into a standalone executable, you will need to have
+[AutoHotkey_L](http://l.autohotkey.net/) installed.
+
+Once you have AutoHotkey_L installed, simply right-click the `Compile.ahk`
+file and select "Compile Script".
+
+The compiled `FlicFlac.exe` will be created in the root directory.
+
+
 License
 --------------------------------------------------
 
